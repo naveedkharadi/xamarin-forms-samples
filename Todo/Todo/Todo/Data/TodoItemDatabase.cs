@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AppCenter.Crashes;
 using SQLite;
 using Todo.Models;
 
@@ -38,14 +40,38 @@ namespace Todo.Data
 
         public Task<int> SaveItemAsync(TodoItem item)
         {
-            if (item.ID != 0)
+            try
             {
-                return Database.UpdateAsync(item);
+                if(item.Notes.Contains("0"))
+                {
+                    throw new Exception("Notes field contains a 0. An exception will be thrown here.");
+                }
+                if (item.Notes.Contains("1"))
+                {
+                    throw new Exception("Notes field contains a 1. An exception will be thrown here and a crash will also be generated.");
+                }
+                if (item.ID != 0)
+                {
+                    return Database.UpdateAsync(item);
+                }
+                else
+                {
+                    return Database.InsertAsync(item);
+                }
             }
-            else
+            catch(Exception exception)
             {
-                return Database.InsertAsync(item);
+                var properties = new Dictionary<string, string> {
+                    { "Notes", item.Notes }
+                  };
+                Crashes.TrackError(exception, properties);
+                if (item.Notes.Contains("1"))
+                {
+                    Crashes.GenerateTestCrash();
+                }
+                throw exception;
             }
+            return new Task<int>(() => -1);
         }
 
         public Task<int> DeleteItemAsync(TodoItem item)
