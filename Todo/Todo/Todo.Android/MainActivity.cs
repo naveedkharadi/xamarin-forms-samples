@@ -16,7 +16,7 @@ namespace Todo.Droid
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            AppCenter.Start("20b33ffd-82cb-4ae2-9b51-19dbce0371cc", typeof(Analytics), typeof(Crashes));
+            AppCenter.Start("6ac016b6-b0bb-4f4d-93fe-6bea8651d72c", typeof(Analytics), typeof(Crashes));
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
         }

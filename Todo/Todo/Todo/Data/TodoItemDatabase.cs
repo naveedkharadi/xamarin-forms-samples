@@ -69,9 +69,9 @@ namespace Todo.Data
                 {
                     Crashes.GenerateTestCrash();
                 }
-                throw exception;
+                //throw exception;
             }
-            return new Task<int>(() => -1);
+            return new Task<int>(() => 0);
         }
 
         public Task<int> DeleteItemAsync(TodoItem item)
